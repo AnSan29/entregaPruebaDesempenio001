@@ -4,6 +4,8 @@
 
 package com.mycompany.libronova;
 
+import com.mycompany.libronova.view.BookMenu;
+
 /**
  *
  * @author andres
@@ -11,6 +13,6 @@ package com.mycompany.libronova;
 public class LibroNova {
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        new BookMenu().mostrar();
     }
 }
