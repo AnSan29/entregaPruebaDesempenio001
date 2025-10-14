@@ -4,9 +4,8 @@
 
 package com.mycompany.libronova;
 
-import com.mycompany.libronova.model.User;
-import com.mycompany.libronova.service.UserService;
-import com.mycompany.libronova.view.LoginDialog;
+import com.mycompany.libronova.view.BookMenu;
+import com.mycompany.libronova.view.MemberMenu;
 
 /**
  *
@@ -15,20 +14,13 @@ import com.mycompany.libronova.view.LoginDialog;
 public class LibroNova {
 
     public static void main(String[] args) {
-        var userService = new UserService();
-
-        //crear un usuario de prueba
-        try {
-            userService.create(new User("admin","123","ADMIN","ACTIVO"));
-        } catch (Exception ignored) {}
-
-        var login = new LoginDialog();
-        var logged = login.prompt();
-        if(logged != null){
-            System.out.println("Bienvenido "+ logged.getUsername() + " ("+ logged.getRole() + ")" );
-            userService.listarUsuarios();
-        }else{
-            System.out.println("Login cancelado.");
-        }
+        String[] ops = {"Libros", "Socios", "Salir"};
+        int op;
+        do {
+            op = javax.swing.JOptionPane.showOptionDialog(null, "Menú principal", "LibroNova",
+                 0, javax.swing.JOptionPane.PLAIN_MESSAGE, null, ops, ops[0]);
+            if (op == 0) new BookMenu().mostrar();
+            else if (op == 1) new MemberMenu().mostrar();
+        } while (op != 2 && op != javax.swing.JOptionPane.CLOSED_OPTION);
     }
 }
