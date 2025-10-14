@@ -18,7 +18,7 @@ public class UserService {
         if (u.getRole() == null) u.setRole("ASISTENTE");
         if (u.getEstado() == null) u.setEstado("ACTIVO");
         Long id = dao.create(u);
-        AppLogger.log("POST /users", "Usuario creado: " + u.getUsername());
+        AppLogger.http("POST", "/users", "Usuario creado: " + u.getUsername());
         return id;
     }
 
@@ -30,7 +30,7 @@ public class UserService {
             throw new CredencialesInvalidasException("Contraseña incorrecta");
         if (!"ACTIVO".equalsIgnoreCase(u.getEstado()))
             throw new CredencialesInvalidasException("Usuario inactivo");
-        AppLogger.log("POST /login", "Sesión iniciada: " + u.getUsername());
+        AppLogger.http("POST", "/login", "Sesión iniciada: " + u.getUsername());
         return userOpt;
     }
 

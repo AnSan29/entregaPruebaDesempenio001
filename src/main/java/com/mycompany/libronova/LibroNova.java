@@ -4,25 +4,31 @@
 
 package com.mycompany.libronova;
 
+import com.mycompany.libronova.config.AppConfig;
 import com.mycompany.libronova.view.BookMenu;
 import com.mycompany.libronova.view.MemberMenu;
 import com.mycompany.libronova.view.LoanMenu;
+import com.mycompany.libronova.view.ExportMenu;
 
+import javax.swing.*;
 /**
  *
  * @author andres
  */
 public class LibroNova {
-
     public static void main(String[] args) {
-         String[] ops = {"Libros", "Socios", "Préstamos", "Salir"};
+        // inicializa properties + logging
+       AppConfig.get("db.url", "");
+
+        String[] ops = {"Libros", "Socios", "Préstamos", "Exportar CSV", "Salir"};
         int op;
         do {
-            op = javax.swing.JOptionPane.showOptionDialog(null, "Menú principal", "LibroNova",
-                    0, javax.swing.JOptionPane.PLAIN_MESSAGE, null, ops, ops[0]);
+            op = JOptionPane.showOptionDialog(null, "Menú principal", "LibroNova",
+                    0, JOptionPane.PLAIN_MESSAGE, null, ops, ops[0]);
             if (op == 0) new BookMenu().mostrar();
             else if (op == 1) new MemberMenu().mostrar();
             else if (op == 2) new LoanMenu().mostrar();
-        } while (op != 3 && op != javax.swing.JOptionPane.CLOSED_OPTION);
+            else if (op == 3) new ExportMenu().mostrar();
+        } while (op != 4 && op != JOptionPane.CLOSED_OPTION);
     }
 }
