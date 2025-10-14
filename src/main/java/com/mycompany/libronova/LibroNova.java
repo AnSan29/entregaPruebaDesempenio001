@@ -4,7 +4,9 @@
 
 package com.mycompany.libronova;
 
-import com.mycompany.libronova.view.BookMenu;
+import com.mycompany.libronova.model.User;
+import com.mycompany.libronova.service.UserService;
+import com.mycompany.libronova.view.LoginDialog;
 
 /**
  *
@@ -13,6 +15,20 @@ import com.mycompany.libronova.view.BookMenu;
 public class LibroNova {
 
     public static void main(String[] args) {
-        new BookMenu().mostrar();
+        var userService = new UserService();
+
+        //crear un usuario de prueba
+        try {
+            userService.create(new User("admin","123","ADMIN","ACTIVO"));
+        } catch (Exception ignored) {}
+
+        var login = new LoginDialog();
+        var logged = login.prompt();
+        if(logged != null){
+            System.out.println("Bienvenido "+ logged.getUsername() + " ("+ logged.getRole() + ")" );
+            userService.listarUsuarios();
+        }else{
+            System.out.println("Login cancelado.");
+        }
     }
 }
