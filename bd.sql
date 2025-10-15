@@ -1,0 +1,49 @@
+CREATE DATABASE IF NOT EXISTS libronova CHARACTER SET utf8mb4;
+USE libronova;
+
+CREATE TABLE user (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  username VARCHAR(50) UNIQUE NOT NULL,
+  password_hash VARCHAR(100) NOT NULL,
+  role ENUM('ADMIN','ASISTENTE') NOT NULL,
+  estado ENUM('ACTIVO','INACTIVO') NOT NULL DEFAULT 'ACTIVO',
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE member (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  full_name VARCHAR(120) NOT NULL,
+  email VARCHAR(120) UNIQUE,
+  estado ENUM('ACTIVO','INACTIVO') NOT NULL DEFAULT 'ACTIVO',
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE book (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  isbn VARCHAR(20) NOT NULL UNIQUE,
+  titulo VARCHAR(200) NOT NULL,
+  autor VARCHAR(120) NOT NULL,
+  categoria VARCHAR(80) NOT NULL,
+  ejemplares_totales INT NOT NULL,
+  ejemplares_disponibles INT NOT NULL,
+  precio_referencia DECIMAL(10,2) NOT NULL,
+  activo BOOLEAN NOT NULL DEFAULT TRUE,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE loan (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  member_id BIGINT NOT NULL,
+  book_id BIGINT NOT NULL,
+  fecha_prestamo DATE NOT NULL,
+  fecha_vencimiento DATE NOT NULL,
+  fecha_devolucion DATE NULL,
+  multa INT DEFAULT 0,
+  estado ENUM('PRESTADO','DEVUELTO','VENCIDO') NOT NULL DEFAULT 'PRESTADO',
+  CONSTRAINT fk_loan_member FOREIGN KEY(member_id) REFERENCES member(id),
+  CONSTRAINT fk_loan_book FOREIGN KEY(book_id) REFERENCES book(id)
+);
+
+CREATE INDEX idx_book_autor ON book(autor);
+CREATE INDEX idx_book_categoria ON book(categoria);
+CREATE INDEX idx_loan_member_estado ON loan(member_id, estado);
