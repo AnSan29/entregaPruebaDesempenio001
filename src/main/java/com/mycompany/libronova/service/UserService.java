@@ -1,8 +1,8 @@
 package com.mycompany.libronova.service;
 
-
 import java.util.Optional;
 
+import com.mycompany.libronova.config.AppConfig;
 import com.mycompany.libronova.dao.UserDao;
 import com.mycompany.libronova.dao.jdbc.UserDaoJdbc;
 import com.mycompany.libronova.exception.CredencialesInvalidasException;
@@ -10,7 +10,7 @@ import com.mycompany.libronova.model.User;
 import com.mycompany.libronova.util.AppLogger;
 
 public class UserService {
-    
+
     private final UserDao dao = new UserDaoJdbc();
 
     // Decorador sobre create()
@@ -36,5 +36,18 @@ public class UserService {
 
     public void listarUsuarios() {
         dao.findAll().forEach(u -> System.out.println("GET /users -> " + u));
+    }
+
+    /** Crea admin por defecto si no existe (valores en config.properties) */
+    public void bootstrapAdminIfNeeded() {
+        String username = AppConfig.get("admin.username", "admin");
+        String password = AppConfig.get("admin.password", "1234");
+        String role     = AppConfig.get("admin.role", "ADMIN");
+
+        if (dao.findByUsername(username).isEmpty()) {
+            User admin = new User(username, password, role, "ACTIVO");
+            dao.create(admin);
+            AppLogger.http("POST", "/users", "Bootstrap admin created: " + username);
+        }
     }
 }

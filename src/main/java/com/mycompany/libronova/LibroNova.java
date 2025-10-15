@@ -1,24 +1,33 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- */
-
 package com.mycompany.libronova;
 
 import com.mycompany.libronova.config.AppConfig;
+import com.mycompany.libronova.model.User;
+import com.mycompany.libronova.service.UserService;
 import com.mycompany.libronova.view.BookMenu;
 import com.mycompany.libronova.view.MemberMenu;
 import com.mycompany.libronova.view.LoanMenu;
 import com.mycompany.libronova.view.ExportMenu;
+import com.mycompany.libronova.view.LoginDialog;
 
 import javax.swing.*;
-/**
- *
- * @author andres
- */
+
 public class LibroNova {
     public static void main(String[] args) {
         // inicializa properties + logging
-       AppConfig.get("db.url", "");
+        AppConfig.get("db.url", "");
+
+        // crea admin por defecto si no existe
+        UserService userService = new UserService();
+        userService.bootstrapAdminIfNeeded();
+
+        // login obligatorio
+        LoginDialog login = new LoginDialog();
+        User logged = login.prompt();
+        if (logged == null) {
+            JOptionPane.showMessageDialog(null, "Sesión cancelada. Saliendo…");
+            return;
+        }
+        JOptionPane.showMessageDialog(null, "Bienvenido " + logged.getUsername() + " (" + logged.getRole() + ")");
 
         String[] ops = {"Libros", "Socios", "Préstamos", "Exportar CSV", "Salir"};
         int op;
